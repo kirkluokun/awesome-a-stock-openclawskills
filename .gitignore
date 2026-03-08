@@ -92,3 +92,4 @@ cache/
 *.wav
 *.avi
 *.mov
+check-secrets.sh
