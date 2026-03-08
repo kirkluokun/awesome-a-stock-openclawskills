@@ -1,0 +1,7 @@
+# Deep Research Skill 依赖
+
+# 核心（Deep 模式必须）
+google-genai>=1.56.0
+
+# 可选（自动加载 .env）
+python-dotenv
