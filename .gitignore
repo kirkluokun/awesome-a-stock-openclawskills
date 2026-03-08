@@ -1,0 +1,85 @@
+# ===========================
+# OpenClaw Public Skills
+# Comprehensive .gitignore
+# ===========================
+
+# ---- macOS ----
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ---- Environment / Secrets ----
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.token
+secrets/
+auth_state.json
+
+# ---- Output / Data ----
+output/
+outputs/
+results/
+data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.csv
+*.xlsx
+*.parquet
+
+# ---- Node.js ----
+node_modules/
+dist/
+build/
+coverage/
+package-lock.json
+yarn.lock
+
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+*.egg
+
+# ---- Logs / Temp / Cache ----
+*.log
+tmp/
+temp/
+cache/
+.cache/
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- Archives / Binary ----
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ---- Media (large files) ----
+*.mp4
+*.mp3
+*.wav
+*.avi
+*.mov
