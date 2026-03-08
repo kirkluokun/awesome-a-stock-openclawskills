@@ -1,0 +1,30 @@
+# === 核心依赖 ===
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+seaborn>=0.12
+
+# === 数据源 ===
+yfinance>=0.2.28          # 美股/港股/商品/加密/外汇
+mplfinance>=0.12          # 专业K线图
+
+# === 统计分析 ===
+statsmodels>=0.14         # 时间序列、检验、VAR、VECM
+arch>=6.0                 # GARCH 家族、单位根检验
+scipy>=1.11               # 统计检验、优化器
+
+# === 高阶分析 ===
+scikit-learn>=1.3         # PCA、聚类、t-SNE、UMAP
+hmmlearn>=0.3             # 隐马尔可夫模型
+ruptures>=1.1             # 变点检测 (PELT, Binseg, Bai-Perron)
+networkx>=3.1             # 网络分析、MST、社区检测
+PyWavelets>=1.4           # 小波分析
+
+# === 预测 ===
+prophet>=1.1              # Facebook Prophet 时间序列预测
+
+# === A股数据（可选） ===
+# tushare>=1.4            # 取消注释并配置 TUSHARE_TOKEN
+
+# === 加密货币（可选） ===
+# ccxt>=4.0               # 交易所数据接口
