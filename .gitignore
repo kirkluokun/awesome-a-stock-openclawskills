@@ -93,3 +93,4 @@ cache/
 *.avi
 *.mov
 check-secrets.sh
+/stock-tushare-pro-mcp/tests
