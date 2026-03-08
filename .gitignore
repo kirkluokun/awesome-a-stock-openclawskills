@@ -7,6 +7,11 @@
 sync-config.json
 sync-to-public.sh
 
+# ---- Token / Auth Cache ----
+.token_cache
+*_token_cache
+*.token_cache
+
 # ---- macOS ----
 .DS_Store
 .AppleDouble
