@@ -4,7 +4,6 @@
 # ===========================
 
 # ---- Sync Tools (本地使用，不推送) ----
-sync-config.json
 sync-to-public.sh
 
 # ---- Token / Auth Cache ----
