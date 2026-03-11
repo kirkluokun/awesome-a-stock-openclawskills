@@ -22,6 +22,7 @@ sync-to-public.sh
 .env
 .env.*
 *.env
+!.env.example
 *.key
 *.pem
 *.p12
