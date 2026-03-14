@@ -1,0 +1,107 @@
+[
+  {
+    "name": "业绩数据 (ingest)",
+    "cmd": [
+      "analyzers/earnings/ingest.py"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "业绩对比 (compare)",
+    "cmd": [
+      "analyzers/earnings/compare.py"
+    ],
+    "depends_on": "业绩数据 (ingest)",
+    "enabled": true
+  },
+  {
+    "name": "券商盈利预测 (report_rc)",
+    "cmd": [
+      "fetchers/report_rc_daily.py",
+      "--days",
+      "7"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "研报元数据 (research_report)",
+    "cmd": [
+      "fetchers/research_report.py",
+      "--date",
+      "{today}"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "金股 (broker_recommend)",
+    "cmd": [
+      "-m",
+      "analyzers.broker_recommend.pipeline",
+      "fetch"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "机构调研 (stk_surv)",
+    "cmd": [
+      "-m",
+      "analyzers.stk_surv.pipeline",
+      "fetch",
+      "--days",
+      "10"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "资产负债表 (balancesheet)",
+    "cmd": [
+      "fetchers/balancesheet_batch.py",
+      "--vip",
+      "--start-date",
+      "{first_period}",
+      "--end-date",
+      "{last_period}"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "财务指标 (fina_indicator)",
+    "cmd": [
+      "fetchers/fina_indicator_vip_batch.py",
+      "--start-date",
+      "{first_period}",
+      "--end-date",
+      "{last_period}"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "现金流量表 (cashflow)",
+    "cmd": [
+      "fetchers/cashflow_vip_batch.py",
+      "--start-date",
+      "{first_period}",
+      "--end-date",
+      "{last_period}"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "技术面因子 (stk_factor_pro)",
+    "cmd": [
+      "fetchers/stk_factor_pro.py",
+      "--trade-date",
+      "{today}"
+    ],
+    "enabled": true
+  },
+  {
+    "name": "神奇九转 (stk_nineturn)",
+    "cmd": [
+      "fetchers/stk_nineturn.py",
+      "--trade-date",
+      "{today_dash} 00:00:00"
+    ],
+    "enabled": true
+  }
+]

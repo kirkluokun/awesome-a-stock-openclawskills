@@ -311,6 +311,44 @@ class Momentum(Strategy):
         return Signal()
 
 
+class MATouchSell(Strategy):
+    """双均线非对称策略：下探买入 / 突破卖出。
+
+    买入条件：收盘价从上方向下穿越短期均线（下探短期均线买入）。
+    卖出条件：收盘价从下方向上穿越长期均线（突破长期均线卖出）。
+
+    默认参数：short_period=5，long_period=20。
+    """
+
+    name = "ma_touch_sell"
+    lookback = 20
+
+    def generate_signals(self, data: pd.DataFrame, params: Dict[str, Any]) -> Signal:
+        short = params.get("short_period", 5)
+        long_ = params.get("long_period", 20)
+
+        if len(data) < long_ + 1:
+            return Signal()
+
+        close = data["close"]
+        short_ma = close.rolling(window=short).mean()
+        long_ma  = close.rolling(window=long_).mean()
+
+        curr_c, prev_c = close.iloc[-1], close.iloc[-2]
+        curr_s, prev_s = short_ma.iloc[-1], short_ma.iloc[-2]
+        curr_l, prev_l = long_ma.iloc[-1],  long_ma.iloc[-2]
+
+        # 买入：收盘价从上方穿越短期均线（下探）
+        if prev_c >= prev_s and curr_c < curr_s:
+            return Signal(entry=True, direction="long")
+
+        # 卖出：收盘价从下方穿越长期均线（突破）
+        if prev_c <= prev_l and curr_c > curr_l:
+            return Signal(exit=True)
+
+        return Signal()
+
+
 # Strategy registry
 STRATEGIES = {
     "sma_crossover": SMAcrossover(),
@@ -321,6 +359,7 @@ STRATEGIES = {
     "breakout": Breakout(),
     "mean_reversion": MeanReversion(),
     "momentum": Momentum(),
+    "ma_touch_sell": MATouchSell(),
 }
 
 

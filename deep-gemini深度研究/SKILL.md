@@ -134,7 +134,7 @@ bash {SKILL_DIR}/scripts/lite_research.sh \
 ```
 
 - 耗时 3-8 分钟，草稿质量
-- 使用模型：`gemini-3-pro-preview`（可配置）
+- 使用模型：`gemini-3.1-pro-preview`（可配置）
 
 ### 异步通知（两种模式共用）
 

@@ -1,15 +1,15 @@
 ---
 name: reddit-search
-description: Search Reddit for subreddits and get information about them.
+description: 搜索 Reddit 的子版块并获取相关信息。
 homepage: https://github.com/TheSethRose/clawdbot
 metadata: {"clawdbot":{"emoji":"📮","requires":{"bins":["node","npx"],"env":[]}}}
 ---
 
-# Reddit Search
+# Reddit 搜索
 
-Search Reddit for subreddits and get information about them.
+搜索 Reddit 子版块并获取相关信息。
 
-## Quick start
+## 快速开始
 
 ```bash
 {baseDir}/scripts/reddit-search info programming
@@ -18,63 +18,63 @@ Search Reddit for subreddits and get information about them.
 {baseDir}/scripts/reddit-search posts typescript 5
 ```
 
-## Commands
+## 命令
 
-### Get subreddit info
+### 获取子版块信息
 
 ```bash
 {baseDir}/scripts/reddit-search info <subreddit>
 ```
 
-Shows subscriber count, NSFW status, creation date, and description with sidebar links.
+显示订阅人数、NSFW 状态、创建日期和版块介绍（含侧栏链接）。
 
-### Search for subreddits
+### 搜索子版块
 
 ```bash
 {baseDir}/scripts/reddit-search search <query> [limit]
 ```
 
-Search for subreddits matching the query. Default limit is 10.
+搜索与关键词匹配的子版块。默认返回 10 个结果。
 
-### List popular subreddits
+### 列出热门子版块
 
 ```bash
 {baseDir}/scripts/reddit-search popular [limit]
 ```
 
-List the most popular subreddits. Default limit is 10.
+列出最热门的子版块。默认返回 10 个结果。
 
-### List new subreddits
+### 列出新建子版块
 
 ```bash
 {baseDir}/scripts/reddit-search new [limit]
 ```
 
-List newly created subreddits. Default limit is 10.
+列出新创建的子版块。默认返回 10 个结果。
 
-### Get top posts from a subreddit
+### 获取子版块热帖
 
 ```bash
 {baseDir}/scripts/reddit-search posts <subreddit> [limit]
 ```
 
-Get the top posts from a subreddit sorted by hot. Default limit is 5.
+获取子版块中按热度排序的热门帖子。默认返回 5 条。
 
-## Examples
+## 示例
 
 ```bash
-# Get info about r/programming
+# 获取 r/programming 的版块信息
 {baseDir}/scripts/reddit-search info programming
 
-# Search for JavaScript communities
+# 搜索 JavaScript 相关社区（返回20个）
 {baseDir}/scripts/reddit-search search javascript 20
 
-# List top 15 popular subreddits
+# 列出前15个热门子版块
 {baseDir}/scripts/reddit-search popular 15
 
-# List new subreddits
+# 列出新建子版块
 {baseDir}/scripts/reddit-search new 10
 
-# Get top 5 posts from r/typescript
+# 获取 r/typescript 的前5条热帖
 {baseDir}/scripts/reddit-search posts typescript 5
 ```

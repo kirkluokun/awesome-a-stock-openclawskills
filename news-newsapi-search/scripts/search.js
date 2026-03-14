@@ -6,9 +6,10 @@ const path = require('path');
 
 // Load environment variables
 function loadEnv() {
+  const skillDir = path.resolve(__dirname, '..');
   const envPaths = [
-    path.join(process.env.HOME, '.openclaw', '.env'),
-    '/Users/kirk/Projects/openclaw-skills/.env'
+    path.join(skillDir, '.env'),              // 本技能文件夹
+    path.join(skillDir, '..', '.env'),        // 上一级目录（多技能共享）
   ];
   envPaths.forEach(envPath => {
     if (fs.existsSync(envPath)) {

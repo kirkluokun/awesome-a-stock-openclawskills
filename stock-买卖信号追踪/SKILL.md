@@ -1,5 +1,5 @@
 ---
-name: trade-signal
+name: 买卖信号追踪
 version: 1.0.0
 description: Real-time trade signals with executable Buy/Sell/Hold recommendations for stocks. Use when asked about trading decisions, stock analysis, technicals, buy/sell calls, earnings plays, price targets, analyst ratings, entry/exit points, portfolio rebalancing, or any investment decision requiring actionable intelligence. Supports US + Global markets, Asia emerging markets, individual stocks, ETFs, and options strategies. 
 homepage: https://terminal-x.ai

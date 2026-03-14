@@ -26,6 +26,46 @@ from reportlab.platypus import (
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+# macOS 中文字体：优先 Arial Unicode，其次 STHeiti（黑体-简），避免中文显示为方块
+def _register_cjk_font():
+    """注册支持中文的字体，返回 (normal_name, bold_name)。"""
+    import os
+    import platform
+    candidates = []
+    if platform.system() == 'Darwin':
+        candidates = [
+            ('HeitiSC', '/System/Library/Fonts/STHeiti Medium.ttc', 0),
+            ('ArialUnicodeMS', '/System/Library/Fonts/Supplemental/Arial Unicode.ttf', None),
+            ('SongtiSC', '/System/Library/Fonts/Supplemental/Songti.ttc', 0),
+            ('PingFang', '/System/Library/Fonts/PingFang.ttc', 0),
+        ]
+        # 用户目录下的中文字体作为备选
+        user_font = os.path.expanduser('~/Library/Fonts/FZLTHJW.TTF')
+        if os.path.isfile(user_font):
+            candidates.append(('FZLanTingHei', user_font, None))
+    for name, path, sub in candidates:
+        try:
+            if os.path.isfile(path):
+                if sub is not None:
+                    f = TTFont(name, path, subfontIndex=sub)
+                else:
+                    f = TTFont(name, path)
+                pdfmetrics.registerFont(f)
+                return (name, name)
+        except Exception:
+            continue
+    return ('Helvetica', 'Helvetica-Bold')
+
+_CJK_FONT, _CJK_FONT_BOLD = _register_cjk_font()
+
+
+def _escape_for_paragraph(s):
+    """Paragraph 内需转义 & < >，避免被当作标签解析。"""
+    if s is None:
+        return ''
+    s = str(s)
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
 # Color palette (professional slate-based)
 COLORS = {
     'primary': colors.HexColor('#1e293b'),      # Dark slate
@@ -47,6 +87,7 @@ COLORS = {
 def create_styles():
     """Create custom paragraph styles for the report."""
     styles = getSampleStyleSheet()
+    styles['Normal'].fontName = _CJK_FONT
 
     # Title style (for header)
     styles.add(ParagraphStyle(
@@ -55,7 +96,7 @@ def create_styles():
         fontSize=24,
         textColor=COLORS['white'],
         spaceAfter=6,
-        fontName='Helvetica-Bold'
+        fontName=_CJK_FONT_BOLD
     ))
 
     # Section heading
@@ -67,7 +108,7 @@ def create_styles():
         spaceBefore=16,
         spaceAfter=8,
         borderPadding=(0, 0, 4, 0),
-        fontName='Helvetica-Bold'
+        fontName=_CJK_FONT_BOLD
     ))
 
     # Subsection heading
@@ -78,7 +119,7 @@ def create_styles():
         textColor=COLORS['secondary'],
         spaceBefore=12,
         spaceAfter=6,
-        fontName='Helvetica-Bold'
+        fontName=_CJK_FONT_BOLD
     ))
 
     # Body text (custom)
@@ -115,7 +156,7 @@ def create_styles():
         parent=styles['Normal'],
         fontSize=10,
         textColor=COLORS['primary'],
-        fontName='Helvetica-Bold',
+        fontName=_CJK_FONT_BOLD,
         spaceAfter=2
     ))
 
@@ -141,7 +182,7 @@ def create_header_table(data, styles):
         [Paragraph('<font color="white" size="9">ACCOUNT RESEARCH REPORT</font>', styles['Normal'])],
         [Paragraph(f'<font color="white" size="20"><b>{company}</b></font>', styles['Normal'])],
         [Spacer(1, 8)],
-        [Paragraph(f'<font color="#94a3b8" size="9"><b>Date:</b> {date}  |  <b>Source:</b> {url}  |  <b>Analyst:</b> Claude AI</font>', styles['Normal'])]
+        [Paragraph(f'<font color="#94a3b8" size="9"><b>Date:</b> {date}  |  <b>Source:</b> {url}  |  <b>Analyst:</b> openclaw</font>', styles['Normal'])]
     ]
 
     header_table = Table(header_content, colWidths=[7*inch])
@@ -164,8 +205,23 @@ def create_section_heading(title, styles):
     return elements
 
 
-def create_profile_table(profile_data):
-    """Create the company profile table."""
+def create_profile_table(profile_data, styles):
+    """Create the company profile table；单元格用 Paragraph 渲染以正确显示中文。"""
+    label_style = ParagraphStyle(
+        'ProfileLabel',
+        parent=styles['Normal'],
+        fontSize=9,
+        textColor=COLORS['secondary'],
+        fontName=_CJK_FONT_BOLD,
+    )
+    value_style = ParagraphStyle(
+        'ProfileValue',
+        parent=styles['Normal'],
+        fontSize=9,
+        textColor=COLORS['secondary'],
+        fontName=_CJK_FONT,
+        leading=12,
+    )
     rows = []
     fields = [
         ('Company Name', 'name'),
@@ -181,7 +237,10 @@ def create_profile_table(profile_data):
     for label, key in fields:
         value = profile_data.get(key, '')
         if value:
-            rows.append([label, value])
+            rows.append([
+                Paragraph(_escape_for_paragraph(label), label_style),
+                Paragraph(_escape_for_paragraph(value), value_style),
+            ])
 
     if not rows:
         return None
@@ -191,7 +250,6 @@ def create_profile_table(profile_data):
         ('BACKGROUND', (0, 0), (0, -1), COLORS['bg_light']),
         ('TEXTCOLOR', (0, 0), (0, -1), COLORS['secondary']),
         ('TEXTCOLOR', (1, 0), (1, -1), COLORS['secondary']),
-        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 9),
         ('PADDING', (0, 0), (-1, -1), 8),
         ('GRID', (0, 0), (-1, -1), 0.5, COLORS['border']),
@@ -245,17 +303,18 @@ def create_competitor_table(competitors, styles):
         parent=styles['Normal'],
         fontSize=9,
         textColor=COLORS['secondary'],
-        leading=12
+        leading=12,
+        fontName=_CJK_FONT
     )
     cell_style_bold = ParagraphStyle(
         'TableCellBold',
         parent=cell_style,
-        fontName='Helvetica-Bold'
+        fontName=_CJK_FONT_BOLD
     )
     header_style = ParagraphStyle(
         'TableHeader',
         parent=cell_style,
-        fontName='Helvetica-Bold',
+        fontName=_CJK_FONT_BOLD,
         textColor=COLORS['secondary']
     )
 
@@ -336,7 +395,7 @@ def generate_pdf(data, output_path):
     # Company Profile
     if data.get('profile'):
         story.extend(create_section_heading('Company Profile', styles))
-        profile_table = create_profile_table(data['profile'])
+        profile_table = create_profile_table(data['profile'], styles)
         if profile_table:
             story.append(KeepTogether([profile_table]))
         story.append(Spacer(1, 8))

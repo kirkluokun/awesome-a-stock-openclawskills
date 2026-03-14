@@ -14,7 +14,7 @@
     uv run python -m a_stock_watcher.cli stats
 
 crontab 示例（每小时执行）：
-    0 * * * * cd /Users/kirk/PROJECT/openclaw-manager/openclaw-skills/a-stock-watcher && uv run python -m a_stock_watcher.cli fetch >> data/cron.log 2>&1
+    0 * * * * cd /path/to/capture-韭菜公社 && uv run python -m a_stock_watcher.cli fetch >> data/cron.log 2>&1
 """
 
 import argparse

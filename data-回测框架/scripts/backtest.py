@@ -42,44 +42,79 @@ def parse_period(period: str) -> timedelta:
         raise ValueError(f"Unknown period unit: {unit}")
 
 
+def _is_a_stock(symbol: str) -> bool:
+    """判断是否为 A股代码（如 600519.SH / 000001.SZ）"""
+    import re
+    return bool(re.match(r'^\d{6}\.(SH|SZ|BJ)$', symbol, re.IGNORECASE))
+
+
 def load_data(symbol: str, start: datetime, end: datetime, data_dir: Path) -> pd.DataFrame:
-    """Load price data from CSV or fetch if not cached."""
-    
-    # Try to load from cache
+    """从 CSV 缓存或数据源加载价格数据。
+
+    A股代码（600519.SH / 000001.SZ）自动走 Tushare，
+    其余品种（BTC-USD / AAPL 等）走 yfinance。
+    """
+    # 尝试读缓存
     cache_file = data_dir / f"{symbol.replace('/', '_').replace('-', '_')}_1d.csv"
-    
+
     if cache_file.exists():
         df = pd.read_csv(cache_file, parse_dates=['date'], index_col='date')
-        # Remove timezone info for comparison
         if df.index.tz is not None:
             df.index = df.index.tz_localize(None)
         df = df[(df.index >= pd.Timestamp(start)) & (df.index <= pd.Timestamp(end))]
         if len(df) > 0:
             return df
 
-    # Fetch using yfinance
-    try:
-        import yfinance as yf
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    if _is_a_stock(symbol):
+        # --- Tushare 路径（A股）---
+        import os
+        try:
+            import tushare as ts
+        except ImportError:
+            print("tushare 未安装。请执行: pip install tushare")
+            sys.exit(1)
+
+        token = os.getenv("TUSHARE_API_KEY")
+        if not token:
+            print("错误: 未设置 TUSHARE_API_KEY 环境变量")
+            sys.exit(1)
+
+        pro = ts.pro_api(token)
+        print(f"从 Tushare 获取 {symbol} 日线数据 ...")
+        df = pro.daily(
+            ts_code=symbol,
+            start_date=start.strftime("%Y%m%d"),
+            end_date=end.strftime("%Y%m%d"),
+            fields="trade_date,open,high,low,close,vol,amount",
+        )
+        if df is None or df.empty:
+            print(f"Tushare 未返回数据: {symbol}")
+            sys.exit(1)
+
+        df = df.rename(columns={"trade_date": "date", "vol": "volume"})
+        df["date"] = pd.to_datetime(df["date"])
+        df = df.set_index("date").sort_index()
+        df = df[["open", "high", "low", "close", "volume"]]
+
+    else:
+        # --- yfinance 路径（加密/美股）---
+        try:
+            import yfinance as yf
+        except ImportError:
+            print("yfinance 未安装。请执行: pip install yfinance")
+            sys.exit(1)
+
         ticker = yf.Ticker(symbol)
         df = ticker.history(start=start, end=end, interval='1d')
         df.columns = [c.lower() for c in df.columns]
         df.index.name = 'date'
-
-        # Remove timezone for consistency
         if df.index.tz is not None:
             df.index = df.index.tz_localize(None)
 
-        # Cache the data
-        data_dir.mkdir(parents=True, exist_ok=True)
-        df.to_csv(cache_file)
-
-        return df
-    except ImportError:
-        print("yfinance not installed. Install with: pip install yfinance")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error fetching data for {symbol}: {e}")
-        sys.exit(1)
+    df.to_csv(cache_file)
+    return df
 
 
 def run_backtest(

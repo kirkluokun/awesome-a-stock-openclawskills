@@ -1,84 +1,96 @@
 ---
-name: grok-search
-description: Search the web or X/Twitter using xAI Grok server-side tools (web_search, x_search) via the xAI Responses API. Use when you need tweets/threads/users from X, want Grok as an alternative to Brave, or you need structured JSON + citations.
-homepage: https://docs.x.ai/docs/guides/tools/search-tools
-triggers: ["grok", "xai", "search x", "search twitter", "find tweets", "x search", "twitter search", "web_search", "x_search"]
-metadata: {"clawdbot":{"emoji":"🔎","requires":{"bins":["node"],"env":["XAI_API_KEY"]},"primaryEnv":"XAI_API_KEY"}}
+name: search-x
+description: 使用 Grok 实时搜索 X/Twitter，查找帖子、热门话题和讨论，并附带引用来源。
+homepage: https://docs.x.ai
+triggers:
+  - search x
+  - search twitter
+  - find tweets
+  - what's on x about
+  - x search
+  - twitter search
+metadata:
+  clawdbot:
+    emoji: "🔍"
 ---
 
-Run xAI Grok locally via bundled scripts (search + chat + model listing). Default output for search is *pretty JSON* (agent-friendly) with citations.
+# 搜索 X
 
-## API key
+由 Grok 的 x_search 工具驱动的实时 X/Twitter 搜索，返回带引用来源的真实推文。
 
-The script looks for an xAI API key in this order:
-- `XAI_API_KEY` env var
-- `~/.clawdbot/clawdbot.json` → `env.XAI_API_KEY`
-- `~/.clawdbot/clawdbot.json` → `skills.entries["grok-search"].apiKey`
-- fallback: `skills.entries["search-x"].apiKey` or `skills.entries.xai.apiKey`
+## 配置
 
-## Run
+设置 xAI API 密钥：
 
-Use `{baseDir}` so the command works regardless of workspace layout.
-
-### Search
-
-- Web search (JSON):
-  - `node {baseDir}/scripts/grok_search.mjs "<query>" --web`
-
-- X/Twitter search (JSON):
-  - `node {baseDir}/scripts/grok_search.mjs "<query>" --x`
-
-### Chat
-
-- Chat (text):
-  - `node {baseDir}/scripts/chat.mjs "<prompt>"`
-
-- Chat (vision):
-  - `node {baseDir}/scripts/chat.mjs --image /path/to/image.jpg "<prompt>"`
-
-### Models
-
-- List models:
-  - `node {baseDir}/scripts/models.mjs`
-
-## Useful flags
-
-Output:
-- `--links-only` print just citation URLs
-- `--text` hide the citations section in pretty output
-- `--raw` include the raw Responses API payload on stderr (debug)
-
-Common:
-- `--max <n>` limit results (default 8)
-- `--model <id>` (default `grok-4-1-fast`)
-
-X-only filters (server-side via x_search tool params):
-- `--days <n>` (e.g. 7)
-- `--from YYYY-MM-DD` / `--to YYYY-MM-DD`
-- `--handles @a,@b` (limit to these handles)
-- `--exclude @bots,@spam` (exclude handles)
-
-## Output shape (JSON)
-
-```json
-{
-  "query": "...",
-  "mode": "web" | "x",
-  "results": [
-    {
-      "title": "...",
-      "url": "...",
-      "snippet": "...",
-      "author": "...",
-      "posted_at": "..."
-    }
-  ],
-  "citations": ["https://..."]
-}
+```bash
+clawdbot config set skills.entries.search-x.apiKey "xai-YOUR-KEY"
 ```
 
-## Notes
+或使用环境变量：
+```bash
+export XAI_API_KEY="xai-YOUR-KEY"
+```
 
-- `citations` are merged/validated from xAI response annotations where possible (more reliable than trusting the model’s JSON blindly).
-- Prefer `--x` for tweets/threads, `--web` for general research.
-- **Default to English queries** for both web and X searches unless the user explicitly requests a different language.
+获取 API 密钥：https://console.x.ai
+
+## 命令
+
+### 基础搜索
+```bash
+node {baseDir}/scripts/search.js "AI video editing"
+```
+
+### 按时间过滤
+```bash
+node {baseDir}/scripts/search.js --days 7 "breaking news"
+node {baseDir}/scripts/search.js --days 1 "trending today"
+```
+
+### 按账号过滤
+```bash
+node {baseDir}/scripts/search.js --handles @elonmusk,@OpenAI "AI announcements"
+node {baseDir}/scripts/search.js --exclude @bots "real discussions"
+```
+
+### 输出选项
+```bash
+node {baseDir}/scripts/search.js --json "topic"        # 完整 JSON 响应
+node {baseDir}/scripts/search.js --compact "topic"     # 仅推文内容，无冗余信息
+node {baseDir}/scripts/search.js --links-only "topic"  # 仅 X 链接
+```
+
+## 对话示例
+
+**用户：**"搜索 X 上关于 Claude Code 的讨论"
+**操作：** 以"Claude Code"为关键词执行搜索
+
+**用户：**"查找 @remotion_dev 过去一周的推文"
+**操作：** 执行 `--handles @remotion_dev --days 7`
+
+**用户：**"今天 Twitter 上关于 AI 的热门话题是什么？"
+**操作：** 执行 `--days 1 "AI trending"`
+
+**用户：**"搜索 X 上过去30天关于 Remotion 最佳实践的内容"
+**操作：** 执行 `--days 30 "Remotion best practices"`
+
+## 工作原理
+
+使用 xAI 的 Responses API（`/v1/responses`）调用 `x_search` 工具：
+- 模型：`grok-4-1-fast-non-reasoning`（针对智能体搜索优化）
+- 返回带 URL 的真实推文
+- 包含可核实的引用来源
+- 支持日期和账号过滤
+
+## 返回格式
+
+每条结果包含：
+- **@用户名**（显示名称）
+- 推文内容
+- 发布日期/时间
+- 推文直链
+
+## 环境变量
+
+- `XAI_API_KEY` — xAI API 密钥（必填）
+- `SEARCH_X_MODEL` — 模型覆盖（默认：grok-4-1-fast）
+- `SEARCH_X_DAYS` — 默认搜索天数（默认：30）

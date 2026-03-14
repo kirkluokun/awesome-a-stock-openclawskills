@@ -4,11 +4,17 @@ Historical Data Fetcher
 Fetch and cache price data from various sources.
 
 Usage:
+    # A股（Tushare）
+    python fetch_data.py --symbol 600519.SH --period 2y --source tushare
+    python fetch_data.py --symbol 000001.SZ --start 2022-01-01 --end 2024-01-01 --source tushare
+
+    # 加密货币 / 美股（yfinance）
     python fetch_data.py --symbol BTC-USD --period 2y --interval 1d
     python fetch_data.py --symbol ETH-USD --start 2020-01-01 --end 2024-01-01
 """
 
 import argparse
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 import sys
@@ -51,6 +57,53 @@ def fetch_yfinance(symbol: str, start: datetime, end: datetime, interval: str) -
     df.index.name = 'date'
     
     return df
+
+
+def fetch_tushare(symbol: str, start: datetime, end: datetime) -> 'pd.DataFrame':
+    """从 Tushare 获取 A股日线数据。
+
+    Args:
+        symbol: A股代码，如 600519.SH 或 000001.SZ
+        start:  起始日期
+        end:    结束日期
+
+    Returns:
+        DataFrame，索引为 date，列包含 open/high/low/close/volume
+    """
+    try:
+        import tushare as ts
+        import pandas as pd
+    except ImportError:
+        print("tushare/pandas 未安装。请执行: pip install tushare pandas")
+        sys.exit(1)
+
+    token = os.getenv("TUSHARE_API_KEY")
+    if not token:
+        print("错误: 未设置 TUSHARE_API_KEY 环境变量")
+        sys.exit(1)
+
+    pro = ts.pro_api(token)
+
+    start_str = start.strftime("%Y%m%d")
+    end_str = end.strftime("%Y%m%d")
+
+    print(f"从 Tushare 获取 {symbol} 日线数据 {start_str} ~ {end_str} ...")
+    df = pro.daily(
+        ts_code=symbol,
+        start_date=start_str,
+        end_date=end_str,
+        fields="trade_date,open,high,low,close,vol,amount",
+    )
+
+    if df is None or df.empty:
+        raise ValueError(f"Tushare 未返回数据: {symbol}")
+
+    # 统一列名，与框架其余部分保持一致
+    df = df.rename(columns={"trade_date": "date", "vol": "volume"})
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.set_index("date").sort_index()
+
+    return df[["open", "high", "low", "close", "volume"]]
 
 
 def fetch_coingecko(symbol: str, days: int) -> 'pd.DataFrame':
@@ -106,7 +159,7 @@ def main():
     parser.add_argument('--start', help='Start date (YYYY-MM-DD)')
     parser.add_argument('--end', help='End date (YYYY-MM-DD)')
     parser.add_argument('--interval', '-i', default='1d', help='Data interval (1d, 1h, etc.)')
-    parser.add_argument('--source', default='yfinance', choices=['yfinance', 'coingecko'])
+    parser.add_argument('--source', default='yfinance', choices=['yfinance', 'coingecko', 'tushare'])
     parser.add_argument('--output', '-o', help='Output directory')
     
     args = parser.parse_args()
@@ -123,7 +176,9 @@ def main():
         start = end - timedelta(days=730)  # 2 years default
     
     # Fetch data
-    if args.source == 'yfinance':
+    if args.source == 'tushare':
+        df = fetch_tushare(args.symbol, start, end)
+    elif args.source == 'yfinance':
         df = fetch_yfinance(args.symbol, start, end, args.interval)
     else:
         days = (end - start).days

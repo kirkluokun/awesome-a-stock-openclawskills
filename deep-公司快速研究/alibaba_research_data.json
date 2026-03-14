@@ -1,0 +1,185 @@
+{
+  "company_name": "阿里巴巴集团 (Alibaba Group)",
+  "source_url": "https://www.alibaba.com",
+  "report_date": "March 9, 2026",
+  "executive_summary": "阿里巴巴集团是中国领先的电商与科技集团，旗下 Alibaba.com 为全球最大 B2B 跨境电商平台之一，连接制造商、供应商与全球买家。集团业务涵盖淘天（国内电商）、阿里云、国际数字商业（速卖通、Lazada、Trendyol 等）、菜鸟、本地生活与数字娱乐。2024 财年收入约 9,412 亿元、同比增 8%；国际电商收入同比增 45%。CEO 吴泳铭，董事长蔡崇信；面临京东、拼多多、亚马逊及 Temu/Shein 等竞争。",
+  "profile": {
+    "name": "阿里巴巴集团 (Alibaba Group)",
+    "industry": "电商 / 云计算 / 数字商业",
+    "headquarters": "中国杭州",
+    "founded": "1999",
+    "ceo": "吴泳铭 (Eddie Wu)，CEO 兼淘天集团、云智能集团董事长（2023年9月上任）",
+    "size": "约 20 万+ 员工（集团层面）；Alibaba.com 年活买家约 1.3 亿",
+    "website": "https://www.alibaba.com",
+    "funding": "2024年11月双币种债券融资 50 亿美元；2024年5月 50 亿美元可转债；2024年领投 Moonshot AI、MiniMax 等 AI 融资"
+  },
+  "products": {
+    "offerings": [
+      {
+        "name": "Alibaba.com B2B 平台",
+        "description": "全球 B2B 在线批发市场，覆盖 34K+ 定制工厂，品类含消费电子、服装、家居、工业机械、汽配、新能源等；支持小额批发、定制加工、图片搜货、本地仓与 Alibaba Guaranteed 保障"
+      },
+      {
+        "name": "淘天（淘宝/天猫）",
+        "description": "国内零售电商与品牌旗舰店，88VIP 会员超 3,500 万，客户管理收入与 GMV 双位数增长"
+      },
+      {
+        "name": "阿里云（云智能集团）",
+        "description": "公共云与 AI 服务，通义千问大模型；核心云产品与 AI 相关收入双位数/三位数同比增长"
+      },
+      {
+        "name": "国际数字商业（AIDC）",
+        "description": "速卖通 Choice、Lazada、Trendyol 等；跨境 5 日/10 日妥投率同比翻倍，Trendyol 在海湾地区为下载量领先电商应用之一"
+      },
+      {
+        "name": "菜鸟",
+        "description": "智慧物流与跨境物流网络，支撑集团电商履约"
+      }
+    ],
+    "differentiators": [
+      "全球最大 B2B 跨境电商平台之一，供应商与品类覆盖广",
+      "一站式从寻源、定制到履约的 B2B 能力",
+      "阿里云与通义大模型支撑集团 AI 与数字化",
+      "国际电商多区域布局（东南亚、中东、欧洲等）与强劲增速"
+    ],
+    "tech_stack": {
+      "Core": "电商中台、推荐与搜索",
+      "Cloud": "阿里云、多可用区",
+      "AI/ML": "通义千问、AI 驱动选品与运营"
+    }
+  },
+  "target_market": {
+    "segments": "B2B 买家（批发商、零售商、制造商、品牌方）、跨境电商卖家；国内消费者（淘天）；企业客户（阿里云）；海外消费者（速卖通、Lazada、Trendyol）",
+    "verticals": ["消费电子", "服装与配饰", "家居与园艺", "工业机械", "汽配", "新能源", "农业食品", "美妆", "包装印刷", "医疗器械"],
+    "personas": [
+      {
+        "title": "跨境采购 / 采购经理",
+        "description": "需要稳定供应商、小单起订、定制加工与合规保障，关注 Alibaba Guaranteed 与物流时效"
+      },
+      {
+        "title": "品牌与零售商",
+        "description": "寻源新品、ODM/OEM、本地仓与快速补货，关注数据选品与趋势排行"
+      },
+      {
+        "title": "企业 IT / 技术决策者",
+        "description": "需要云与 AI 能力，关注通义与云产品合规与成本"
+      }
+    ],
+    "business_model": "B2B 平台：会员费、营销与增值服务、交易佣金；国内电商：客户管理收入、佣金；云：订阅与按量计费；国际电商：平台佣金与广告"
+  },
+  "use_cases": [
+    {
+      "title": "跨境批发与定制",
+      "description": "买家通过 Alibaba.com 对接工厂，完成小单定制、Logo/图案打样与批量采购，配合 Alibaba Guaranteed 与物流保障降低风险"
+    },
+    {
+      "title": "多区域零售电商",
+      "description": "速卖通 Choice、Lazada、Trendyol 为当地消费者提供跨境与本地商品，5/10 日达与高妥投率支撑体验"
+    },
+    {
+      "title": "企业上云与 AI",
+      "description": "企业采用阿里云与通义千问进行基础设施与智能化升级，云与 AI 收入快速增长"
+    }
+  ],
+  "competitors": [
+    {
+      "name": "京东 (JD.com)",
+      "strengths": "自建物流、正品与时效在国内领先",
+      "differentiation": "阿里以平台生态与多业务协同见长；京东偏重自营与物流"
+    },
+    {
+    "name": "拼多多 / Temu",
+      "strengths": "社交与低价、农业与下沉市场；Temu 全球下载领先",
+      "differentiation": "阿里覆盖 B2B、国内零售与多区域国际电商，拼多多/Temu 更偏 C 端与极致低价"
+    },
+    {
+      "name": "亚马逊 (Amazon)",
+      "strengths": "全球电商与云龙头，北美/欧洲/日本份额高",
+      "differentiation": "阿里在中国与亚洲及 B2B 市场深耕，亚马逊在欧美 C 端与 3P 卖家生态更强"
+    },
+    {
+      "name": "Shein",
+      "strengths": "快时尚与算法供应链、年轻用户",
+      "differentiation": "阿里为综合电商与 B2B；Shein 聚焦服装与 DTC"
+    }
+  ],
+  "competitive_positioning": "在中国与亚洲具备电商、云与国际化综合优势；B2B 端 Alibaba.com 为全球主要采购平台；国内面临拼多多与京东分流，国际面临 Temu/Shein 与亚马逊竞争；通过组织重组（如电商业务整合、蒋凡统管电商）与 AI 投入强化增长与效率。",
+  "industry": {
+    "trends": [
+      "跨境电商与全托管/半托管模式普及",
+      "AI 驱动选品、运营与客服",
+      "供应链近岸与多区域布局",
+      "监管与平台责任加强"
+    ],
+    "opportunities": [
+      "国际电商高增速与新兴市场（如海湾）拓展",
+      "云与 AI 产品商业化与政企市场",
+      "B2B 与跨境物流体验持续提升"
+    ],
+    "challenges": [
+      "国内消费与竞争压力；市值较峰值回落",
+      "反垄断与合规要求",
+      "Temu/Shein 等对份额与利润的挤压"
+    ]
+  },
+  "developments": [
+    {
+      "date": "2024年11月",
+      "title": "50 亿美元双币种债券",
+      "description": "亚洲太平洋地区当年最大企业债券之一，用于一般企业用途、偿债与股份回购"
+    },
+    {
+      "date": "2024年11月",
+      "title": "蒋凡出任电商业务集团负责人",
+      "description": "统管淘天、国际数字商业等电商业务，直接向 CEO 吴泳铭汇报，强化电商协同"
+    },
+    {
+      "date": "2024年5月",
+      "title": "50 亿美元可转债发行",
+      "description": "0.50% 可转换优先票据 2031 年到期，补充资本"
+    },
+    {
+      "date": "2024年2–3月",
+      "title": "领投 AI 公司",
+      "description": "领投 Moonshot AI（约 10 亿美元，估值约 25 亿美元）、MiniMax 约 6 亿美元融资，加码生成式 AI"
+    },
+    {
+      "date": "2024财年 Q4",
+      "title": "淘天 GMV 与国际电商双位数/45% 增长",
+      "description": "淘天 GMV 与订单双位数增长；AIDC 收入同比增 45%，速卖通 Choice 占单量约 70%"
+    }
+  ],
+  "lead_gen": {
+    "keywords": {
+      "primary": ["B2B 采购", "跨境电商", "批发平台", "供应商", "Alibaba.com"],
+      "vertical": ["消费电子批发", "服装 OEM", "工业机械", "新能源供应链"],
+      "technology": ["通义千问", "阿里云", "电商中台", "跨境物流"],
+      "pain_point": ["寻源效率", "小单定制", "跨境合规", "供应链稳定"]
+    },
+    "outreach_angles": [
+      {
+        "title": "B2B 一站式寻源与履约",
+        "description": "强调 Alibaba.com 工厂覆盖、定制能力与 Alibaba Guaranteed、菜鸟跨境时效"
+      },
+      {
+        "title": "多区域电商与云+AI",
+        "description": "国际电商高增长与多区域布局；云与通义在企业数字化与 AI 场景的应用"
+      }
+    ],
+    "partnership_targets": [
+      {
+        "name": "跨境物流与支付伙伴",
+        "rationale": "提升妥投率与本地化支付，增强买家体验"
+      },
+      {
+        "name": "品牌与制造商",
+        "rationale": "扩大优质供给与品牌旗舰，提升平台 GMV 与客单价"
+      }
+    ]
+  },
+  "info_gaps": [
+    "Alibaba.com 单独营收与利润未公开",
+    "各国家/地区买家占比未披露",
+    "部分业务线具体 MAU/DAU 未在公开财报细分"
+  ]
+}

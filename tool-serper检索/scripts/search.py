@@ -34,9 +34,10 @@ except ImportError:
 # Auto-load .env from skill directory
 # =============================================================================
 def _load_env_file():
+    skill_dir = Path(__file__).parent.parent
     env_paths = [
-        Path(__file__).parent.parent / ".env",
-        Path("/Users/kirk/Projects/openclaw-skills/.env"),
+        skill_dir / ".env",           # 本技能文件夹
+        skill_dir.parent / ".env",    # 上一级目录（多技能共享）
     ]
     for env_path in env_paths:
         if env_path.exists():

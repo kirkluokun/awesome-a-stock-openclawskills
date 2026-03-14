@@ -1,7 +1,7 @@
 """登录工具 — 自动登录韭菜公社，保存登录态
 
 用法（自动登录）：
-    cd /Users/kirk/PROJECT/openclaw-manager/openclaw-skills/a-stock-watcher && source .env && uv run python -m a_stock_watcher.auth
+    cd /path/to/capture-韭菜公社 && source .env && uv run python -m a_stock_watcher.auth
 
 会打开浏览器 → 自动输入手机号和密码 → 登录 → 保存 cookie 到 data/auth_state.json。
 后续所有爬虫运行会自动加载此文件，无需重复登录。
